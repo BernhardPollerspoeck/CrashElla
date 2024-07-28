@@ -3,22 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrashElla.Demo", "demo\CrashElla.Demo\CrashElla.Demo.csproj", "{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "001_Core", "001_Core", "{1AD8F937-59E5-4B0E-94EB-6B8E2722A727}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "101_Ingest", "101_Ingest", "{8D84F6E6-0D28-47EF-8BCF-4174F10ED0E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrashElla.Core", "src\CrashElla.Core\CrashElla.Core.csproj", "{5B3AD985-4E96-434D-809D-191465AC99F2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "999_Demo", "999_Demo", "{D62E9730-D4E1-4DC3-985A-AD1FDB0BC440}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrashElla.Ingest.Http.Seq", "src\CrashElla.Ingest.Http.Seq\CrashElla.Ingest.Http.Seq.csproj", "{5C2000B0-D665-497B-A4A9-83789F39A955}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashElla.Core", "src\CrashElla.Core\CrashElla.Core.csproj", "{5B3AD985-4E96-434D-809D-191465AC99F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashElla.Ingest.Http.Seq", "src\CrashElla.Ingest.Http.Seq\CrashElla.Ingest.Http.Seq.csproj", "{5C2000B0-D665-497B-A4A9-83789F39A955}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "201_Catchers", "201_Catchers", "{FB6471BE-75F3-414E-9438-F851835C050B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CrashElla.Framework.Maui", "src\CrashElla.Framework.Maui\CrashElla.Framework.Maui.csproj", "{3B3AA6A1-4E49-4552-B504-C2E3C33C4CB7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "000_Infra", "000_Infra", "{AB2D0E73-A2F3-452B-AC97-202BFCCCEAFD}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\release.yml = .github\workflows\release.yml
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrashElla.Framework.Maui", "src\CrashElla.Framework.Maui\CrashElla.Framework.Maui.csproj", "{3B3AA6A1-4E49-4552-B504-C2E3C33C4CB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +25,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{5B3AD985-4E96-434D-809D-191465AC99F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B3AD985-4E96-434D-809D-191465AC99F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B3AD985-4E96-434D-809D-191465AC99F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,6 +48,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E1E5DE3E-BC8B-452B-8A5B-83A2B341657A} = {D62E9730-D4E1-4DC3-985A-AD1FDB0BC440}
 		{5B3AD985-4E96-434D-809D-191465AC99F2} = {1AD8F937-59E5-4B0E-94EB-6B8E2722A727}
 		{5C2000B0-D665-497B-A4A9-83789F39A955} = {8D84F6E6-0D28-47EF-8BCF-4174F10ED0E0}
 		{3B3AA6A1-4E49-4552-B504-C2E3C33C4CB7} = {FB6471BE-75F3-414E-9438-F851835C050B}
