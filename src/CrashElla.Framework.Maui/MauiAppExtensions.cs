@@ -1,10 +1,6 @@
 ﻿using CrashElla.Core;
-#if ANDROID || WINDOWS
-using CrashElla.Core.Extensions;
-#endif
 
 namespace CrashElla.Framework.Maui;
-
 public static class MauiAppExtensions
 {
 #if WINDOWS
@@ -76,6 +72,13 @@ public static class MauiAppExtensions
 
 	public static MauiApp EnableMauiCrashElla(this MauiApp app)
 	{
-		return app.EnableMauiCrashElla([]);
+		var properties = new Dictionary<string, object>()
+		{
+			{ "App", AppInfo.Current.Name },
+			{ "Version", AppInfo.Current.VersionString },
+			{ "IsEmulator", DeviceInfo.Current.DeviceType is DeviceType.Virtual },
+			{ "Device", DeviceInfo.Current.VersionString }
+		};
+		return app.EnableMauiCrashElla(properties);
 	}
 }

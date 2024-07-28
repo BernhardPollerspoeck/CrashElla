@@ -12,5 +12,5 @@ public interface IIngestProvider
 	/// </summary>
 	/// <param name="entry">The log entry to ingest.</param>
 	/// <param name="customProperties">The custom properties associated with the log entry.</param>
-	void Ingest(LogEntry entry, IReadOnlyDictionary<string, object> customProperties);
+	Task<bool> Ingest(LogEntry entry, IReadOnlyDictionary<string, object> customProperties);
 }

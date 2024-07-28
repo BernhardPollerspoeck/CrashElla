@@ -1,5 +1,4 @@
 ﻿using CrashElla.Core;
-using CrashElla.Core.Extensions;
 
 namespace CrashElla.Demo;
 
@@ -13,7 +12,7 @@ public partial class MainPage : ContentPage
 		_crashElla = crashElla;
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	private void OnCatchedClicked(object sender, EventArgs e)
 	{
 		try
 		{
@@ -25,10 +24,9 @@ public partial class MainPage : ContentPage
 		}
 	}
 
-	private void OnCounter2Clicked(object sender, EventArgs e)
+	private void OnUncatchedClicked(object sender, EventArgs e)
 	{
-		_crashElla.LogInformation("Counter 2 {Now} has been clicked", DateTime.UtcNow);
-
+		throw new InvalidOperationException("Uncaught");
 	}
 }
 

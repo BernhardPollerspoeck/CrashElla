@@ -1,5 +1,4 @@
-﻿using CrashElla.Core.Extensions;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace CrashElla.Core;
 
@@ -10,6 +9,9 @@ public static class CrashEllaInitializer
 	{
 		AppDomain.CurrentDomain.UnhandledException += (sender, args)
 			=> crashElla.Exception((Exception)args.ExceptionObject);
-
+		if (crashElla is CrashElla ella)
+		{
+			ella.RetryStoredEntries();
+		}
 	}
 }

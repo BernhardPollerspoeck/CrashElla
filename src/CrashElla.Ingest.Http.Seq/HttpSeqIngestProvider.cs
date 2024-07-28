@@ -5,59 +5,71 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using CrashElla.Core.Data;
 using System.Text.RegularExpressions;
+using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace CrashElla.Ingest.Http.Seq;
 
-public partial class HttpSeqIngestProvider(IOptions<HttpSeqIngestProviderConfiguration> configuration) : IIngestProvider
+public partial class HttpSeqIngestProvider(
+	IOptions<HttpSeqIngestProviderConfiguration> configuration,
+	ILogger<HttpSeqIngestProvider> logger)
+	: IIngestProvider
 {
-	public void Ingest(LogEntry entry, IReadOnlyDictionary<string, object> customProperties)
+	public async Task<bool> Ingest(LogEntry entry, IReadOnlyDictionary<string, object> customProperties)
 	{
-		Task.Run(async () =>
+
+		HttpStatusCode? result = null;
+		try
 		{
-			try
-			{
-				//TODO: check if we need to log (minimum ingest level will be told by api on first log)
+			var logEvent = CreateEvent(entry, customProperties);
+			result = await SendEvent(logEvent);
+		}
+		catch (Exception ex)
+		{
+			logger.LogError("Error sending log event: {ex}", ex);
+		}
+		return result is HttpStatusCode.Created;
+	}
 
-				var message = FormatMessage(entry.MessageTemplate, entry.Parameters ?? [], out var templatedArguments);
+	private async Task<HttpStatusCode> SendEvent(Dictionary<string, object> logEvent)
+	{
+		var json = JsonSerializer.Serialize(logEvent);
+		var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-				var logId = BitConverter.ToString(BitConverter.GetBytes(Random.Shared.NextDouble()));
-				var logEvent = new Dictionary<string, object>
-				{
-					{ "@i", logId },
-					{ "@m" ,message },
-					{ "@t", DateTime.UtcNow },
-					{ "@l", entry.Level.ToString() },
-					{ "@mt", entry.MessageTemplate },
-				};
-				if (entry.Exception is not null)
-				{
-					logEvent["@x"] = JsonSerializer.Serialize(new SerializableException(entry.Exception));
-				}
-				foreach (var property in customProperties)
-				{
-					logEvent[property.Key] = property.Value;
-				}
-				foreach (var argument in templatedArguments)
-				{
-					logEvent[argument.Key] = argument.Value;
-				}
+		using var client = new HttpClient();
+		// Setze den API-Schlüssel im Header
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("X-Seq-ApiKey", configuration.Value.ApiKey);
 
-				var json = JsonSerializer.Serialize(logEvent);
-				var content = new StringContent(json, Encoding.UTF8, "application/json");
+		var response = await client.PostAsync($"{configuration.Value.IngestUri}/ingest/clef", content);
+		return response.StatusCode;
+	}
 
-				using var client = new HttpClient();
-				// Setze den API-Schlüssel im Header
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("X-Seq-ApiKey", configuration.Value.ApiKey);
+	private static Dictionary<string, object> CreateEvent(LogEntry entry, IReadOnlyDictionary<string, object> customProperties)
+	{
+		var message = FormatMessage(entry.MessageTemplate, entry.Parameters ?? [], out var templatedArguments);
 
-				var response = await client.PostAsync($"{configuration.Value.IngestUri}/ingest/clef", content);
-				var responseContent = await response.Content.ReadAsStringAsync();
-			}
-			catch (Exception ex)
-			{
-				//TODO: log this propperly
-				Console.WriteLine($"Error sending log event: {ex.Message}");
-			}
-		});
+		var logId = BitConverter.ToString(BitConverter.GetBytes(Random.Shared.NextDouble()));
+		var logEvent = new Dictionary<string, object>
+		{
+			{ "@i", logId },
+			{ "@m" ,message },
+			{ "@t", DateTime.UtcNow },
+			{ "@l", entry.Level.ToString() },
+			{ "@mt", entry.MessageTemplate },
+		};
+		if (entry.Exception is not null)
+		{
+			logEvent["@x"] = JsonSerializer.Serialize(entry.Exception);
+		}
+		foreach (var property in customProperties)
+		{
+			logEvent[$"_{property.Key}"] = property.Value;
+		}
+		foreach (var argument in templatedArguments)
+		{
+			logEvent[argument.Key] = argument.Value;
+		}
+		return logEvent;
 	}
 
 	private static string FormatMessage(string messageTemplate, object[] args, out Dictionary<string, object> argumentDictionary)

@@ -22,11 +22,13 @@ public static class MauiProgram
 
 		builder.Services.AddTransient<MainPage>();
 
-		builder.Logging.AddHttpSeqCrashElla(config =>
-		{
-			config.ApiKey = "No0IBNPRdeVFJZ35Pdb0";
-			config.IngestUri = "http://localhost:5341";
-		});
+		builder.Logging
+			.AddHttpSeqCrashElla(config =>
+			{
+				config.ApiKey = "No0IBNPRdeVFJZ35Pdb0";
+				config.IngestUri = "http://localhost:5341";
+			})
+			.WithMauiCrashStore();
 
 
 

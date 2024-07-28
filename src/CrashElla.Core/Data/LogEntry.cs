@@ -17,7 +17,7 @@ public record LogEntry(
 	/// <summary>
 	/// Gets or sets the exception associated with the log entry.
 	/// </summary>
-	Exception? Exception,
+	SerializableException? Exception,
 
 	/// <summary>
 	/// Gets or sets the parameters of the log entry.
