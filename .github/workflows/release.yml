@@ -1,6 +1,13 @@
 
 name: Build and Publish NuGet Packages
 
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'Version of the package'
+        required: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
