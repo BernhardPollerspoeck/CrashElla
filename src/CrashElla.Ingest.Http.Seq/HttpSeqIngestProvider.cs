@@ -57,6 +57,7 @@ public partial class HttpSeqIngestProvider(
 			{ "@t", DateTime.UtcNow },
 			{ "@l", entry.Level.ToString() },
 			{ "@mt", entry.MessageTemplate },
+			{ "__Hash", GetHash(entry.Exception?.StackTrace ?? entry.MessageTemplate) }
 		};
 		if (entry.Exception is not null)
 		{
@@ -71,6 +72,21 @@ public partial class HttpSeqIngestProvider(
 			logEvent[argument.Key] = argument.Value;
 		}
 		return logEvent;
+	}
+
+	private static double GetHash(string v)
+	{
+		var hash = 0;
+		if (v is null)
+		{
+			return hash;
+		}
+		for (var i = 0; i < v.Length; i++)
+		{
+			hash = v[i] + ((hash << 5) - hash);
+		}
+		return hash;
+
 	}
 
 	private static string FormatMessage(string messageTemplate, object[] args, out Dictionary<string, object> argumentDictionary)
