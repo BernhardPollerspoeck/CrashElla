@@ -10,14 +10,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        target:
-          - android
-          - ios
-          - windows
+    runs-on: windows-latest
+    
 
     steps:
     - name: Checkout repository
@@ -28,8 +22,8 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Restore workloads
-      run: dotnet workload restore
+    - name: Install .NET MAUI
+      run: dotnet workload install maui
 
     - name: Restore dependencies
       run: dotnet restore CrashElla.sln
