@@ -12,6 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        target:
+          - android
+          - ios
+          - windows
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
