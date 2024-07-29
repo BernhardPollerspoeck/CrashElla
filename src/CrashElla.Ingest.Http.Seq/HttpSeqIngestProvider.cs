@@ -41,6 +41,7 @@ public partial class HttpSeqIngestProvider(
 		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("X-Seq-ApiKey", configuration.Value.ApiKey);
 
 		var response = await client.PostAsync($"{configuration.Value.IngestUri}/ingest/clef", content);
+		var debugContent = await response.Content.ReadAsStringAsync();
 		return response.StatusCode;
 	}
 
@@ -48,7 +49,7 @@ public partial class HttpSeqIngestProvider(
 	{
 		var message = FormatMessage(entry.MessageTemplate, entry.Parameters ?? [], out var templatedArguments);
 
-		var logId = GetHash(entry.Exception?.StackTrace ?? entry.MessageTemplate);
+		var logId = BitConverter.ToString(BitConverter.GetBytes(Random.Shared.NextDouble()));
 		var logEvent = new Dictionary<string, object>
 		{
 			{ "@i", logId },
@@ -70,21 +71,6 @@ public partial class HttpSeqIngestProvider(
 			logEvent[argument.Key] = argument.Value;
 		}
 		return logEvent;
-	}
-
-	private static double GetHash(string v)
-	{
-		var hash = 0;
-		if (v is null)
-		{
-			return hash;
-		}
-		for (var i = 0; i < v.Length; i++)
-		{
-			hash = v[i] + ((hash << 5) - hash);
-		}
-		return hash;
-
 	}
 
 	private static string FormatMessage(string messageTemplate, object[] args, out Dictionary<string, object> argumentDictionary)
