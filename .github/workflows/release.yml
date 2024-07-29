@@ -33,16 +33,18 @@ jobs:
 
     - name: Pack
       run: dotnet pack CrashElla.sln --configuration Release --output ./nupkgs /p:PackageVersion=${{ github.event.inputs.package_version }} --no-restore --no-build
-      
-    - name: Test
-      run : tree /F
-
-    - name: Verify .nupkg files
+   
+    - name: List .nupkg files
       run: |
-        if [ -z "$(ls -A ./nupkgs/*.nupkg 2>/dev/null)" ]; then
-          echo "No .nupkg files found in ./nupkgs"
-          exit 1
-        fi
+        echo "Listing .nupkg files in ./nupkgs:"
+        ls -l ./nupkgs
 
     - name: Publish to NuGet
-      run: dotnet nuget push ./nupkgs/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: |
+        echo "Pushing .nupkg files to NuGet..."
+        for file in ./nupkgs/*.nupkg; do
+          echo "Pushing $file"
+          dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        done
+
+   
