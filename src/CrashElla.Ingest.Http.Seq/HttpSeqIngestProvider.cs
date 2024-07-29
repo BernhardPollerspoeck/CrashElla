@@ -48,7 +48,7 @@ public partial class HttpSeqIngestProvider(
 	{
 		var message = FormatMessage(entry.MessageTemplate, entry.Parameters ?? [], out var templatedArguments);
 
-		var logId = BitConverter.ToString(BitConverter.GetBytes(Random.Shared.NextDouble()));
+		var logId = GetHash(entry.Exception?.StackTrace ?? entry.MessageTemplate);
 		var logEvent = new Dictionary<string, object>
 		{
 			{ "@i", logId },
@@ -70,6 +70,21 @@ public partial class HttpSeqIngestProvider(
 			logEvent[argument.Key] = argument.Value;
 		}
 		return logEvent;
+	}
+
+	private static double GetHash(string v)
+	{
+		var hash = 0;
+		if (v is null)
+		{
+			return hash;
+		}
+		for (var i = 0; i < v.Length; i++)
+		{
+			hash = v[i] + ((hash << 5) - hash);
+		}
+		return hash;
+
 	}
 
 	private static string FormatMessage(string messageTemplate, object[] args, out Dictionary<string, object> argumentDictionary)
