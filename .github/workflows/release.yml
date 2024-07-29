@@ -40,11 +40,12 @@ jobs:
         ls -l ./nupkgs
 
     - name: Publish to NuGet
+      shell: pwsh
       run: |
         echo "Pushing .nupkg files to NuGet..."
-        for file in ./nupkgs/*.nupkg; do
-          echo "Pushing $file"
-          dotnet nuget push "$file" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
-        done
+        Get-ChildItem -Path ./nupkgs -Filter *.nupkg | ForEach-Object {
+          echo "Pushing $($_.FullName)"
+          dotnet nuget push $_.FullName -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        }
 
    
