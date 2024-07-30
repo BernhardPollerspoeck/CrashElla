@@ -45,13 +45,13 @@ internal class CrashElla(
 
 	internal void Exception(IngestEntry ingestEntry, bool store)
 	{
+		if (store)
+		{
+			crashStore?.Store(ingestEntry);
+		}
+
 		Task.Run(async () =>
 		{
-			if (store)
-			{
-				crashStore?.Store(ingestEntry);
-			}
-
 			var success = await ingestProvider.Ingest(
 				ingestEntry.Log,
 				ingestEntry.Properties);
