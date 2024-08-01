@@ -37,6 +37,8 @@ Framework providers are the interface between the CrashElla core library and var
 ```csharp
 builder.Logging.Add<IngestRegistration>()
 	.WithMauiCrashStore();
+...
+host.EnableMauiCrashElla();
 ```
 
 
