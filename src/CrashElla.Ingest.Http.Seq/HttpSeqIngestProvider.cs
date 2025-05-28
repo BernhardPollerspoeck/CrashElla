@@ -7,6 +7,7 @@ using CrashElla.Core.Data;
 using System.Text.RegularExpressions;
 using System.Net;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography;
 
 namespace CrashElla.Ingest.Http.Seq;
 
@@ -74,19 +75,19 @@ public partial class HttpSeqIngestProvider(
 		return logEvent;
 	}
 
-	private static double GetHash(string v)
+	private static string GetHash(string v)
 	{
-		var hash = 0;
 		if (v is null)
 		{
-			return hash;
+			return "0";
 		}
-		for (var i = 0; i < v.Length; i++)
+		
+		using (var sha256 = SHA256.Create())
 		{
-			hash = v[i] + ((hash << 5) - hash);
+			var bytes = Encoding.UTF8.GetBytes(v);
+			var hashBytes = sha256.ComputeHash(bytes);
+			return Convert.ToHexString(hashBytes);
 		}
-		return hash;
-
 	}
 
 	private static string FormatMessage(string messageTemplate, object[] args, out Dictionary<string, object> argumentDictionary)
